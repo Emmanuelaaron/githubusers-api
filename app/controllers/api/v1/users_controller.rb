@@ -15,6 +15,23 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def login
+    user = User.find_by(username: user_params[:username])
+    if user&.authenticate(user_params[:password])
+      token = encode_user_data({ user_data: user.id })
+      render json: {
+        message: 'user logged in successfully!',
+        token: token,
+        code: 200
+      }
+    else
+      render json: {
+        message: 'Invalid loggin credentials',
+        code: 406
+      }
+    end
+  end
+
   private
 
   def user_params
