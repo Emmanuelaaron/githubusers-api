@@ -10,11 +10,13 @@ class ApplicationController < ActionController::API
   def authentication
     if verify_authentication
       user_id = verify_authentication[0]['user_data']
-      user = User.find(user_id)
-      if user
-        true
-      else
+      puts user_id, 'gshgh'
+      user = User.where(id: user_id)
+      puts '---------------------', user, 'usersfgsfsg-----------------------'
+      if user.nil?
         render json: { message: 'UnAuthorized Contact Admin', code: 401 }
+      else
+        true
       end
     else
       render json: { message: 'UnAuthorized', code: 401 }

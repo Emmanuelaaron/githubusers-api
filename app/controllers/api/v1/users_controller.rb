@@ -32,9 +32,31 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def api_call
+    response = RestClient.get "https://github-trending-api.de.a9sapp.eu/developers?language=#{api_call_param[:lang]}"
+    json = JSON.parse(response)
+    output = []
+    json.each do |item|
+      item_output = {}
+      item_output.store('name', item['name'])
+      item_output.store('username', item['username'])
+      item_output.store('avatar', item['avatar'])
+      item_output.store('repo', {})
+      item_output['repo'].store('name', item['repo']['name'])
+      item_output.store('description', item['repo']['description'])
+      item_output.store('url', item['repo']['url'])
+      output << item_output
+    end
+    render json: output
+  end
+
   private
 
   def user_params
     params.permit(:username, :password)
+  end
+
+  def api_call_param
+    params.permit(:lang)
   end
 end
