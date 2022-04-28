@@ -47,7 +47,10 @@ class Api::V1::UsersController < ApplicationController
       item_output.store('url', item['repo']['url'])
       output << item_output
     end
-    render json: output
+    render json: {
+      code: 200,
+      users: output
+    }
   end
 
   private
